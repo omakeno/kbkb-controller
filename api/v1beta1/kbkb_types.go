@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha1
+package v1beta1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -30,7 +30,7 @@ type KbkbSpec struct {
 
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Minimum=2
-	Kokeshi *int32 `json:"kokeshi"`
+	Kokeshi *int `json:"kokeshi"`
 }
 
 // KbkbStatus defines the observed state of Kbkb
@@ -43,7 +43,6 @@ type KbkbStatus struct {
 // +kubebuilder:subresource:status
 
 // Kbkb is the Schema for the kbkbs API
-// +kubebuilder:subresource:status
 type Kbkb struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

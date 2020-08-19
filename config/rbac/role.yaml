@@ -7,7 +7,24 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
-  - omakenoyouna.net.omakenoyouna.net
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - delete
+  - get
+  - list
+  - watch
+- apiGroups:
+  - k8s.omakenoyouna.net
   resources:
   - kbkbs
   verbs:
@@ -19,7 +36,7 @@ rules:
   - update
   - watch
 - apiGroups:
-  - omakenoyouna.net.omakenoyouna.net
+  - k8s.omakenoyouna.net
   resources:
   - kbkbs/status
   verbs:

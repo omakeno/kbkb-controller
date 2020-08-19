@@ -1,3 +1,4 @@
-## This file is auto-generated, do not modify ##
+## Append samples you want in your CSV to this file as resources ##
 resources:
-- omakenoyouna.net_v1alpha1_kbkb.yaml
+- k8s_v1beta1_kbkb.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples

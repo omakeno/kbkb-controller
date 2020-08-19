@@ -1,10 +1,11 @@
 domain: omakenoyouna.net
 layout: go.kubebuilder.io/v2
+projectName: kbkb-operator
 repo: github.com/omakeno/kbkb-operator
 resources:
-- group: omakenoyouna.net
+- group: k8s
   kind: Kbkb
-  version: v1alpha1
+  version: v1beta1
 version: 3-alpha
 plugins:
-  go.operator-sdk.io/v2-alpha: {}
+  go.sdk.operatorframework.io/v2-alpha: {}

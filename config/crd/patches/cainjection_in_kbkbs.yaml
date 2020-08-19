@@ -5,4 +5,4 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     cert-manager.io/inject-ca-from: $(CERTIFICATE_NAMESPACE)/$(CERTIFICATE_NAME)
-  name: kbkbs.omakenoyouna.net.omakenoyouna.net
+  name: kbkbs.k8s.omakenoyouna.net

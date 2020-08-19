@@ -1,7 +1,0 @@
-apiVersion: omakenoyouna.net.omakenoyouna.net/v1alpha1
-kind: Kbkb
-metadata:
-  name: kbkb-sample
-spec:
-  # Add fields here
-  kokeshi: 4

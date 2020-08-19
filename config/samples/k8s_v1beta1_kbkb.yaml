@@ -1,0 +1,6 @@
+apiVersion: k8s.omakenoyouna.net/v1beta1
+kind: Kbkb
+metadata:
+  name: kbkb-sample
+spec:
+  kokeshi: 4
