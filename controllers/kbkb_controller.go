@@ -18,11 +18,9 @@ package controllers
 
 import (
 	"context"
-
 	"github.com/go-logr/logr"
 	kbkb "github.com/omakeno/kbkb/pkg"
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -49,19 +47,24 @@ func (r *KbkbReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 
 	reqLogger.Info("Reconciling")
 
-	kbkbObj := &k8sv1beta1.Kbkb{}
-	if err := r.Client.Get(ctx, req.NamespacedName, kbkbObj); err != nil {
-		if errors.IsNotFound(err) {
-			reqLogger.Info("kbkb not found. Ignore not found")
-			return ctrl.Result{}, nil
-		}
+	kbkbList := &k8sv1beta1.KbkbList{}
+	if err := r.Client.List(ctx, kbkbList); err != nil {
 		reqLogger.Error(err, "failed to get kbkb")
 		return ctrl.Result{}, err
 	}
+	if len(kbkbList.Items) == 0 {
+		reqLogger.Info("kbkb not found. Ignore not found")
+		return ctrl.Result{}, nil
+	}
+	kbkbObj := kbkbList.Items[0]
 	kokeshi := *(kbkbObj.Spec.Kokeshi)
 
+	listOption := &client.ListOptions{
+		Namespace: kbkbObj.Namespace,
+	}
+
 	podList := &corev1.PodList{}
-	if err := r.Client.List(ctx, podList); err != nil {
+	if err := r.Client.List(ctx, podList, listOption); err != nil {
 		reqLogger.Error(err, "failed to get list of pods")
 		return ctrl.Result{}, err
 	}
@@ -73,6 +76,11 @@ func (r *KbkbReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	}
 
 	kf := kbkb.BuildKbkbFieldFromList(podList, nodeList)
+	if !kf.IsStable() {
+		reqLogger.Info("All containers are not Ready.")
+		return ctrl.Result{}, nil
+	}
+
 	erasablePods := kf.ErasableKbkbPodList(kokeshi)
 
 	for _, kp := range erasablePods {
@@ -84,9 +92,9 @@ func (r *KbkbReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 		}
 
 		if err := r.Client.Delete(ctx, pod); err != nil {
-			reqLogger.Error(err, "failed to delete pod", pod.ObjectMeta.Name)
+			reqLogger.Error(err, "failed to delete pod", "deleteing pod", pod.ObjectMeta.Name)
 		} else {
-			reqLogger.Info("delete pod: ", pod.ObjectMeta.Name)
+			reqLogger.Info("suceeded to delete pod", "deleted pod", pod.ObjectMeta.Name)
 		}
 	}
 
