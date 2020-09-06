@@ -1,7 +1,7 @@
 domain: omakenoyouna.net
 layout: go.kubebuilder.io/v2
-projectName: kbkb-operator
-repo: github.com/omakeno/kbkb-operator
+projectName: kbkb-controller
+repo: github.com/omakeno/kbkb-controller
 resources:
 - group: k8s
   kind: Kbkb
