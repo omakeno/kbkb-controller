@@ -26,7 +26,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	k8sv1beta1 "github.com/omakeno/kbkb-operator/api/v1beta1"
+	k8sv1beta1 "github.com/omakeno/kbkb-controller/api/v1beta1"
 )
 
 // KbkbReconciler reconciles a Kbkb object
