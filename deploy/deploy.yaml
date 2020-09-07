@@ -243,7 +243,7 @@ spec:
         - --enable-leader-election
         command:
         - /manager
-        image: omakenoyouna/kbkb-controller:v0.1.5
+        image: omakenoyouna/kbkb-controller:v0.1.6
         name: manager
         resources:
           limits:

@@ -43,12 +43,16 @@ type KbkbReconciler struct {
 
 func (r *KbkbReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
-	reqLogger := r.Log.WithValues("kbkb", req.NamespacedName)
+	reqLogger := r.Log.WithValues("pod", req.NamespacedName)
 
 	reqLogger.Info("Reconciling")
 
+	listOption := &client.ListOptions{
+		Namespace: req.Namespace,
+	}
+
 	kbkbList := &k8sv1beta1.KbkbList{}
-	if err := r.Client.List(ctx, kbkbList); err != nil {
+	if err := r.Client.List(ctx, kbkbList, listOption); err != nil {
 		reqLogger.Error(err, "failed to get kbkb")
 		return ctrl.Result{}, err
 	}
@@ -58,10 +62,6 @@ func (r *KbkbReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	}
 	kbkbObj := kbkbList.Items[0]
 	kokeshi := *(kbkbObj.Spec.Kokeshi)
-
-	listOption := &client.ListOptions{
-		Namespace: kbkbObj.Namespace,
-	}
 
 	podList := &corev1.PodList{}
 	if err := r.Client.List(ctx, podList, listOption); err != nil {
@@ -103,7 +103,6 @@ func (r *KbkbReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 
 func (r *KbkbReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&k8sv1beta1.Kbkb{}).
 		For(&corev1.Pod{}).
 		Complete(r)
 }
